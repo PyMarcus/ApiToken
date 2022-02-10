@@ -25,16 +25,18 @@ class ApiWithAuthorization:
         session.headers.update({'authorization': json.loads(send_credentials.content)['token']})
         time.sleep(1)
         print("[*]Login efetuado com sucesso!")
-        return json.loads(send_credentials.content)
+        return json.loads(send_credentials.content), session
 
     def get(self, url_to_get=""):
         """faz a solicitação ao método get da api , com o token que foi gerado pelo acesso"""
-        token = {"token": self.__login()["token"]}
+        token = {"token": self.__login()[0]["token"]}
+        session = self.__login()[1]
         print("[*]Aguarde...")
         time.sleep(1)
-        respond = requests.get(url_to_get, headers=token)
+        respond = session.get(url_to_get, headers=token)
         print(respond.content)
         return respond
+
 
 
 if __name__ == '__main__':
